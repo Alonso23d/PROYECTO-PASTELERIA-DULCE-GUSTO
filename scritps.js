@@ -399,3 +399,67 @@ window.cambiarEstadoPedido = (id, nuevoEstado) => {
         setupAdmin(); 
     }
 };
+
+/* --- 5. PANEL DELIVERY --- */
+const setupDelivery = () => {
+    renderDeliveryOrders();
+};
+
+const renderDeliveryOrders = () => {
+    const orders = JSON.parse(localStorage.getItem('orders'));
+    const user = getLoggedUser();
+    const listDisp = document.getElementById('delivery-disponibles');
+    const listMis = document.getElementById('delivery-mis-pedidos');
+    if(!listDisp || !listMis) return;
+    
+    listDisp.innerHTML = ''; listMis.innerHTML = '';
+
+    const disponibles = orders.filter(o => o.estado === 'preparando' && o.tipo_entrega === 'delivery');
+    const misPedidos = orders.filter(o => o.estado === 'en_camino' && o.motorizado === user.email);
+
+    disponibles.forEach(o => {
+        listDisp.innerHTML += `
+            <div class="stat-card" style="text-align:left; border-left:4px solid var(--gold); border-bottom:none; margin-bottom:15px;">
+                <h4>${o.id} - ${o.cliente}</h4>
+                <p style="font-size:1rem; margin:10px 0;">Total: ${formatMoney(o.total)}</p>
+                <button class="btn btn-block" onclick="aceptarPedido('${o.id}')">Aceptar Pedido</button>
+            </div>
+        `;
+    });
+
+    misPedidos.forEach(o => {
+        listMis.innerHTML += `
+            <div class="stat-card" style="text-align:left; border-left:4px solid #3498db; border-bottom:none; margin-bottom:15px;">
+                <h4>${o.id} - ${o.cliente}</h4>
+                <span class="badge en_camino">En Camino</span>
+                <button class="btn btn-block" style="background:#2ecc71; color:white; margin-top:15px;" onclick="completarPedido('${o.id}')">Marcar Entregado</button>
+            </div>
+        `;
+    });
+    
+    if(disponibles.length === 0) listDisp.innerHTML = '<p>No hay pedidos listos para recoger.</p>';
+    if(misPedidos.length === 0) listMis.innerHTML = '<p>No tienes pedidos asignados.</p>';
+};
+
+window.aceptarPedido = (id) => {
+    const orders = JSON.parse(localStorage.getItem('orders'));
+    const order = orders.find(o => o.id === id);
+    if(order) {
+        order.estado = 'en_camino';
+        order.motorizado = getLoggedUser().email;
+        localStorage.setItem('orders', JSON.stringify(orders));
+        showToast('Pedido aceptado');
+        renderDeliveryOrders();
+    }
+};
+
+window.completarPedido = (id) => {
+    const orders = JSON.parse(localStorage.getItem('orders'));
+    const order = orders.find(o => o.id === id);
+    if(order) {
+        order.estado = 'entregado';
+        localStorage.setItem('orders', JSON.stringify(orders));
+        showToast('Pedido entregado exitosamente');
+        renderDeliveryOrders();
+    }
+};
