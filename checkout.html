@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - DULCE GUSTO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body id="page-checkout">
+    <nav>
+        <a href="tienda.html" class="logo">DULCE GUSTO</a>
+        <button class="btn btn-outline" onclick="window.location.href='tienda.html'">Volver a Tienda</button>
+    </nav>
+
+    <div class="checkout-container">
+        <div class="checkout-form">
+            <div class="checkout-box">
+                <h3>1. Datos Personales</h3>
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="cliente-nombre" placeholder="Ej: Juan Pérez" required>
+                </div>
+                <div class="form-group">
+                    <label>DNI / Documento</label>
+                    <input type="text" id="cliente-dni" placeholder="Número de documento" required>
+                </div>
+            </div>
+
+            <div class="checkout-box">
+                <h3>2. Tipo de Entrega</h3>
+                <div class="form-group">
+                    <select id="tipo-entrega">
+                        <option value="recojo">Recojo en Tienda</option>
+                        <option value="delivery">Delivery (Ver Mapa)</option>
+                    </select>
+                </div>
+                <div id="map"></div>
+                <p id="delivery-info" style="font-size:0.8rem; color:#666; margin-top:5px;">Si es delivery, mueve el marcador a tu ubicación.</p>
+            </div>
+
+            <div class="checkout-box">
+                <h3>3. Método de Pago</h3>
+                <div class="form-group">
+                    <select id="metodo-pago">
+                        <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                        <option value="yape">Yape / Plin</option>
+                    </select>
+                </div>
+                <div id="form-tarjeta" style="margin-top:15px;">
+                    <input type="text" placeholder="Número de Tarjeta" class="form-group" style="width:100%; padding:10px;">
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" placeholder="MM/YY" style="width:50%; padding:10px;">
+                        <input type="text" placeholder="CVC" style="width:50%; padding:10px;">
+                    </div>
+                </div>
+                <div id="form-yape" style="display:none; text-align:center; padding:20px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" width="150" alt="QR Yape">
+                    <p>Escanea para pagar</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkout-box" style="height: fit-content;">
+            <h3>Resumen de Pedido</h3>
+            <div id="checkout-items"></div>
+            <div class="order-summary-item" style="margin-top:20px;">
+                <span>Subtotal:</span><span id="checkout-subtotal">S/ 0.00</span>
+            </div>
+            <div class="order-summary-item">
+                <span>Costo Delivery:</span><span id="checkout-delivery">S/ 0.00</span>
+            </div>
+            <div class="order-total-line">
+                <span>Total a Pagar:</span><span id="checkout-total">S/ 0.00</span>
+            </div>
+            <button class="btn btn-block" id="btn-confirmar" style="margin-top:20px; font-size:1.1rem;">Confirmar Pedido</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
