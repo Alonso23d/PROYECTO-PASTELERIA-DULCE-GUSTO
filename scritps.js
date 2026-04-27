@@ -202,3 +202,200 @@ window.goToCheckout = () => {
     if (cart.length === 0) { showToast('El carrito está vacío'); return; }
     window.location.href = 'checkout.html';
 };
+
+/* --- 3. CHECKOUT (LEAFLET & HAVERSINE) --- */
+const STORE_LAT = -12.0464; 
+const STORE_LNG = -77.0428;
+
+const setupCheckout = () => {
+    if (cart.length === 0) { window.location.href = 'tienda.html'; return; }
+    
+    let map, marker;
+    let costoDelivery = 0;
+    const subtotal = cart.reduce((acc, item) => acc + (item.precio * item.cant), 0);
+    
+    const renderResumen = () => {
+        const container = document.getElementById('checkout-items');
+        container.innerHTML = '';
+        cart.forEach(item => {
+            container.innerHTML += `<div class="order-summary-item"><span>${item.cant}x ${item.nombre}</span><span>${formatMoney(item.precio * item.cant)}</span></div>`;
+        });
+        document.getElementById('checkout-subtotal').innerText = formatMoney(subtotal);
+        document.getElementById('checkout-delivery').innerText = formatMoney(costoDelivery);
+        document.getElementById('checkout-total').innerText = formatMoney(subtotal + costoDelivery);
+    };
+
+    const calcHaversine = (lat1, lon1, lat2, lon2) => {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+    };
+
+    const updateDeliveryCost = (lat, lng) => {
+        const dist = calcHaversine(STORE_LAT, STORE_LNG, lat, lng);
+        if (dist <= 2) costoDelivery = 10;
+        else costoDelivery = 10 + Math.ceil(dist - 2) * 2;
+        renderResumen();
+    };
+
+    document.getElementById('tipo-entrega').addEventListener('change', (e) => {
+        const mapDiv = document.getElementById('map');
+        if (e.target.value === 'delivery') {
+            mapDiv.style.display = 'block';
+            costoDelivery = 10;
+            if (!map) {
+                map = L.map('map').setView([STORE_LAT, STORE_LNG], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                marker = L.marker([STORE_LAT, STORE_LNG], { draggable: true }).addTo(map);
+                marker.on('dragend', (ev) => {
+                    const pos = ev.target.getLatLng();
+                    updateDeliveryCost(pos.lat, pos.lng);
+                });
+            }
+        } else {
+            mapDiv.style.display = 'none';
+            costoDelivery = 0;
+        }
+        renderResumen();
+    });
+
+    document.getElementById('metodo-pago').addEventListener('change', (e) => {
+        document.getElementById('form-tarjeta').style.display = e.target.value === 'tarjeta' ? 'block' : 'none';
+        document.getElementById('form-yape').style.display = e.target.value === 'yape' ? 'block' : 'none';
+    });
+
+    document.getElementById('btn-confirmar').addEventListener('click', () => {
+        const nombre = document.getElementById('cliente-nombre').value;
+        const dni = document.getElementById('cliente-dni').value;
+        const tipoEntrega = document.getElementById('tipo-entrega').value;
+
+        if (!nombre || !dni) {
+            showToast('Por favor, ingresa tu nombre y DNI');
+            return;
+        }
+
+        const newOrder = {
+            id: 'ORD-' + Math.floor(Math.random() * 10000),
+            cliente: nombre,
+            dni: dni,
+            items: cart,
+            total: subtotal + costoDelivery,
+            tipo_entrega: tipoEntrega,
+            estado: 'pendiente',
+            fecha: new Date().toLocaleDateString()
+        };
+        
+        const orders = JSON.parse(localStorage.getItem('orders')) || [];
+        orders.push(newOrder);
+        localStorage.setItem('orders', JSON.stringify(orders));
+        
+        localStorage.setItem('cart', JSON.stringify([]));
+        showToast('¡Gracias por tu compra, ' + nombre + '!');
+        setTimeout(() => window.location.href = 'tienda.html', 2000);
+    });
+
+    renderResumen();
+};
+
+/* --- 4. PANEL ADMIN --- */
+const setupAdmin = () => {
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    
+    const entregados = orders.filter(o => o.estado === 'entregado');
+    const totalVentas = entregados.reduce((acc, o) => acc + o.total, 0);
+    const pendientes = orders.filter(o => o.estado === 'pendiente').length;
+
+    document.getElementById('stat-ventas').innerText = formatMoney(totalVentas);
+    document.getElementById('stat-pendientes').innerText = pendientes;
+    document.getElementById('stat-productos').innerText = products.length;
+
+    renderAdminOrders();
+    renderAdminHistory();
+};
+
+const renderAdminOrders = () => {
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    const tbody = document.getElementById('admin-orders-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    
+    const activos = orders.filter(o => o.estado !== 'entregado');
+
+    if (activos.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No hay pedidos activos en este momento.</td></tr>';
+        return;
+    }
+
+    activos.reverse().forEach(o => {
+        tbody.innerHTML += `
+            <tr>
+                <td><strong>${o.id}</strong></td>
+                <td>${o.cliente}</td>
+                <td>${o.tipo_entrega === 'delivery' ? 'Delivery' : 'Recojo'}</td>
+                <td>${formatMoney(o.total)}</td>
+                <td><span class="badge ${o.estado}">${o.estado.replace('_', ' ').toUpperCase()}</span></td>
+                <td>
+                    <select onchange="cambiarEstadoPedido('${o.id}', this.value)">
+                        <option value="pendiente" ${o.estado==='pendiente'?'selected':''}>Pendiente</option>
+                        <option value="preparando" ${o.estado==='preparando'?'selected':''}>Preparando</option>
+                        <option value="en_camino" ${o.estado==='en_camino'?'selected':''}>En Camino</option>
+                        <option value="entregado" ${o.estado==='entregado'?'selected':''}>Entregado</option>
+                    </select>
+                </td>
+            </tr>
+        `;
+    });
+};
+
+const renderAdminHistory = () => {
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    const tbody = document.getElementById('admin-history-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    const entregados = orders.filter(o => o.estado === 'entregado');
+
+    if (entregados.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Aún no hay ventas completadas.</td></tr>';
+        return;
+    }
+
+    entregados.reverse().forEach(o => {
+        let listaProductos = '<ul class="items-lista">';
+        o.items.forEach(item => {
+            listaProductos += `<li><b>${item.cant}x</b> ${item.nombre}</li>`;
+        });
+        listaProductos += '</ul>';
+
+        let nombreMotorizado = o.tipo_entrega === 'delivery' 
+            ? (o.motorizado ? o.motorizado : 'Delivery') 
+            : '<span style="color:#888;">N/A (Recojo)</span>';
+
+        tbody.innerHTML += `
+            <tr>
+                <td><strong>${o.id}</strong></td>
+                <td>${o.cliente}<br><small style="color:#888;">DNI: ${o.dni || 'N/A'}</small></td>
+                <td>${nombreMotorizado}</td>
+                <td><span class="badge ${o.tipo_entrega === 'delivery' ? 'en_camino' : 'preparando'}">${o.tipo_entrega.toUpperCase()}</span></td>
+                <td>${listaProductos}</td>
+                <td>${o.fecha}</td>
+                <td style="color: var(--gold); font-weight: bold; font-size: 1.1rem;">${formatMoney(o.total)}</td>
+            </tr>
+        `;
+    });
+};
+
+window.cambiarEstadoPedido = (id, nuevoEstado) => {
+    const orders = JSON.parse(localStorage.getItem('orders'));
+    const order = orders.find(o => o.id === id);
+    if(order) order.estado = nuevoEstado;
+    localStorage.setItem('orders', JSON.stringify(orders));
+    showToast('Estado actualizado');
+    
+    if (document.body.id === 'page-admin') {
+        setupAdmin(); 
+    }
+};
