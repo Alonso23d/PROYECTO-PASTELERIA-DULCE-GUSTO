@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda - DULCE GUSTO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body id="page-tienda">
+    <nav>
+        <a href="tienda.html" class="logo">DULCE GUSTO</a>
+        <div class="nav-links">
+            <div id="user-info-nav"></div>
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cart-count">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-banner">
+        <div class="hero-content">
+            <h1>El Arte de lo Dulce</h1>
+            <p>Descubre nuestra colección de postres premium, horneados a diario con pasión y los mejores ingredientes del mundo.</p>
+            <button class="btn" style="font-size: 1.2rem; padding: 15px 30px;" onclick="document.getElementById('catalogo').scrollIntoView({behavior: 'smooth'})">
+                Ver Catálogo
+            </button>
+        </div>
+    </header>
+
+    <section class="about-section">
+        <div class="about-text">
+            <h2 class="section-title" style="text-align: left;">Nuestra Historia</h2>
+            <p>En <b>DULCE GUSTO</b>, creemos que cada postre cuenta una historia. Desde nuestros inicios, nos hemos dedicado a perfeccionar la repostería artesanal, fusionando técnicas clásicas europeas con los sabores más intensos y puros.</p>
+            <p>Seleccionamos cacao de origen, vainilla real y frutas frescas de temporada para garantizar que cada bocado sea una experiencia inolvidable. No hacemos solo postres; creamos momentos de felicidad.</p>
+        </div>
+        <div class="about-img">
+            <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&q=80" alt="Chef Pastelero">
+        </div>
+    </section>
+
+    <section class="bestsellers-section">
+        <h2 class="section-title">Lo Más Vendido</h2>
+        <div class="products-grid" style="padding: 0;">
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&q=80" alt="Torta de Chocolate">
+                <h3>Torta de Chocolate Fudge</h3>
+                <div class="price">S/ 60.00</div>
+                <button class="btn" onclick="addToCart(4)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1568644396922-5c3bfae12521?w=500&q=80" alt="Macarons">
+                <h3>Caja de Macarons Premium</h3>
+                <div class="price">S/ 40.00</div>
+                <button class="btn" onclick="addToCart(6)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=500&q=80" alt="Cheesecake">
+                <h3>Cheesecake de Frutos Rojos</h3>
+                <div class="price">S/ 55.00</div>
+                <button class="btn" onclick="addToCart(2)">Añadir al Carrito</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="carousel-section">
+        <h2 class="section-title" style="color: var(--gold);">Recién Horneados</h2>
+        <div class="carousel-track">
+            <div class="carousel-item"><img src="https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=500&q=80" alt="Postre"></div>
+            <div class="carousel-item"><img src="https://images.unsplash.com/photo-1621236378699-8597fa68d99c?w=500&q=80" alt="Postre"></div>
+            <div class="carousel-item"><img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=500&q=80" alt="Postre"></div>
+            <div class="carousel-item"><img src="https://images.unsplash.com/photo-1550617931-e17a7b70dce2?w=500&q=80" alt="Postre"></div>
+            <div class="carousel-item"><img src="https://images.unsplash.com/photo-1514517521153-1be72277b32f?w=500&q=80" alt="Postre"></div>
+            <div class="carousel-item"><img src="https://images.unsplash.com/photo-1587314168485-3236d6710814?w=500&q=80" alt="Postre"></div>
+        </div>
+    </section>
+
+    <section class="full-catalog" id="catalogo">
+        <h2 class="section-title">Nuestro Catálogo Completo</h2>
+        <div class="filters">
+            <button class="btn filter-btn" data-cat="todos">Todos</button>
+            <button class="btn filter-btn" data-cat="tortas">Tortas</button>
+            <button class="btn filter-btn" data-cat="postres">Postres</button>
+            <button class="btn filter-btn" data-cat="cupcakes">Cupcakes</button>
+        </div>
+        <main class="products-grid" id="products-grid"></main>
+    </section>
+
+    <section class="reviews-section">
+        <h2 class="section-title">Lo Que Dicen Nuestros Clientes</h2>
+        <div class="reviews-grid">
+            <div class="review-card">
+                <i class="fas fa-quote-left"></i>
+                <p>"La torta de chocolate es simplemente de otro mundo. La pedí para el cumpleaños de mi mamá y fue el centro de atención. ¡100% recomendado!"</p>
+                <div class="stars">★★★★★</div>
+                <h4>- Camila R.</h4>
+            </div>
+            <div class="review-card">
+                <i class="fas fa-quote-left"></i>
+                <p>"Compré la caja de macarons y el nivel de detalle y sabor es nivel europeo. El delivery fue súper rápido y llegó en perfectas condiciones."</p>
+                <div class="stars">★★★★★</div>
+                <h4>- Jorge M.</h4>
+            </div>
+            <div class="review-card">
+                <i class="fas fa-quote-left"></i>
+                <p>"El cheesecake de frutos rojos es el mejor que he probado en la ciudad. DULCE GUSTO se ha convertido en mi pastelería favorita de lejos."</p>
+                <div class="stars">★★★★★</div>
+                <h4>- Andrea L.</h4>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <h2 class="logo" style="margin-bottom: 20px;">DULCE GUSTO</h2>
+        <p>Ate, Lima - Perú | Premium Desserts & Bakery</p>
+        <p style="margin-top: 10px; color: var(--gold);"><i class="fab fa-instagram"></i> <i class="fab fa-facebook"></i> <i class="fab fa-tiktok"></i></p>
+        <p style="margin-top: 20px; font-size: 0.8rem; color: #666;">© 2026 Dulce Gusto. Todos los derechos reservados.</p>
+    </footer>
+
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Tu Carrito</h3>
+            <i class="fas fa-times" onclick="toggleCart()"></i>
+        </div>
+        <div class="cart-items" id="cart-items"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total">S/ 0.00</span>
+            </div>
+            <button class="btn btn-block" onclick="goToCheckout()">Proceder al Pago</button>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
