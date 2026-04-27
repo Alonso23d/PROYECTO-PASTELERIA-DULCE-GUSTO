@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - DULCE GUSTO</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body id="page-admin">
+    <nav style="background: var(--black);">
+        <span class="logo">Panel Admin - DULCE GUSTO</span>
+        <button class="btn btn-outline" id="btn-logout">Cerrar Sesión</button>
+    </nav>
+
+    <div class="dashboard-container">
+        <h2>Dashboard General</h2>
+        <br>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Ventas (Entregados)</h3>
+                <p id="stat-ventas">S/ 0.00</p>
+            </div>
+            <div class="stat-card">
+                <h3>Pedidos Pendientes</h3>
+                <p id="stat-pendientes">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Productos</h3>
+                <p id="stat-productos">0</p>
+            </div>
+        </div>
+
+        <h2>Gestión de Pedidos Activos</h2>
+        <p style="color: #666; margin-bottom: 15px;">Aquí administras los pedidos que están en proceso.</p>
+        <div style="overflow-x: auto;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID Pedido</th>
+                        <th>Cliente</th>
+                        <th>Tipo</th>
+                        <th>Total</th>
+                        <th>Estado Actual</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-orders-body"></tbody>
+            </table>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2><span style="color: var(--gold);">★</span> Historial de Ventas Completadas</h2>
+        <p style="color: #666; margin-bottom: 15px;">Registro de todas las ventas que ya fueron entregadas o recogidas.</p>
+        <div style="overflow-x: auto;">
+            <table class="data-table">
+                <thead style="background: var(--black);">
+                    <tr>
+                        <th>ID</th>
+                        <th>Comprador</th>
+                        <th>Motorizado</th>
+                        <th>Tipo de Entrega</th>
+                        <th>Productos Comprados</th>
+                        <th>Fecha</th>
+                        <th>Total Ganado</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-history-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

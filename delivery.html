@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motorizado - DULCE GUSTO</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body id="page-delivery">
+    <nav style="background: #34495e;">
+        <span class="logo">App Repartidor</span>
+        <button class="btn btn-outline" id="btn-logout" style="border-color:white; color:white;">Salir</button>
+    </nav>
+
+    <div class="checkout-container" style="max-width: 1000px;">
+        <div class="checkout-box">
+            <h3><span style="color:#f39c12;">●</span> Pedidos Listos en Tienda</h3>
+            <p style="font-size:0.9rem; color:#666; margin-bottom:15px;">Acepta pedidos que ya están "preparando".</p>
+            <div id="delivery-disponibles"></div>
+        </div>
+
+        <div class="checkout-box">
+            <h3><span style="color:#3498db;">●</span> Mis Pedidos Asignados</h3>
+            <p style="font-size:0.9rem; color:#666; margin-bottom:15px;">Pedidos que estás llevando ahora.</p>
+            <div id="delivery-mis-pedidos"></div>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
