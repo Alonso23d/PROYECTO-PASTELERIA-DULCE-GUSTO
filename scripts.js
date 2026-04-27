@@ -17,8 +17,13 @@ const initDB = () => {
         { id: 7, nombre: 'Torta Selva Negra', desc: 'Bizcocho, cerezas y crema chantilly.', precio: 65.00, cat: 'tortas', img: 'https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?w=500&q=80' },
         { id: 8, nombre: 'Cupcake Vainilla Chips', desc: 'Clásico de vainilla con chispas de chocolate.', precio: 7.00, cat: 'cupcakes', img: 'https://images.unsplash.com/photo-1550617931-e17a7b70dce2?w=500&q=80' },
         { id: 9, nombre: 'Brownie Melcochudo', desc: 'Con nueces y helado de vainilla.', precio: 15.00, cat: 'postres', img: 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=500&q=80' },
+<<<<<<< HEAD
         { id: 10, nombre: 'Torta de Zanahoria', desc: 'Especiada, con nueces y frosting suave.', precio: 50.00, cat: 'tortas', img: 'https://veggiefestchicago.org/wp-content/uploads/2021/04/21-carrot-cake.jpg' },
         { id: 11, nombre: 'Croissant de Almendras', desc: 'Crujiente, relleno de crema de almendras.', precio: 12.00, cat: 'postres', img: 'https://es.cravingsjournal.com/wp-content/uploads/2021/05/croissant-de-almendras-5.jpg' },
+=======
+        { id: 10, nombre: 'Torta de Zanahoria', desc: 'Especiada, con nueces y frosting suave.', precio: 50.00, cat: 'tortas', img: 'https://i.ytimg.com/vi/22B2Cggy9qk/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBAzGAtpgJsV0Se7T5dRKA3AgBqGA' },
+        { id: 11, nombre: 'Croissant de Almendras', desc: 'Crujiente, relleno de crema de almendras.', precio: 12.00, cat: 'postres', img: 'https://www.nanette.com.ar/wp-content/uploads/2020/06/croissantdealmendras.jpg' },
+>>>>>>> rama-B
         { id: 12, nombre: 'Cupcake de Limón', desc: 'Relleno de lemon curd y merengue tostado.', precio: 9.00, cat: 'cupcakes', img: 'https://images.unsplash.com/photo-1519869325930-281384150729?w=500&q=80' }
     ];
 
